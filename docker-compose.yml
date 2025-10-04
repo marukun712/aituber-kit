@@ -1,13 +1,28 @@
 version: '3'
 
 services:
-  app:
+  app-1:
     build: .
     ports:
       - '3000:3000'
     volumes:
       - .:/app
       - /app/node_modules
-    env_file:
-      - .env
-    command: npm run dev
+    environment:
+      - NEXT_PUBLIC_SELECT_LANGUAGE="ja"
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_URL="ws://localhost:8000"
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_ENABLED="true"
+    command: npx next dev 
+
+  app-2:
+    build: .
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NEXT_PUBLIC_SELECT_LANGUAGE="ja"
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_URL="ws://localhost:8001"
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_ENABLED="true"
+    command: npx next dev -p 3001

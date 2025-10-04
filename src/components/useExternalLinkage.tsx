@@ -78,7 +78,9 @@ const useExternalLinkage = ({ handleReceiveTextFromWs }: Params) => {
 
     function connectWebsocket() {
       if (wsManager?.isConnected()) return wsManager.websocket
-      return new WebSocket('ws://localhost:8000/ws')
+      return new WebSocket(
+        process.env.NEXT_PUBLIC_MESSAGE_RECEIVER_URL || 'ws://localhost:8000/ws'
+      )
     }
 
     webSocketStore.getState().initializeWebSocket(t, handlers, connectWebsocket)
