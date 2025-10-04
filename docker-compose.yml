@@ -9,10 +9,14 @@ services:
       - .:/app
       - /app/node_modules
     environment:
-      - NEXT_PUBLIC_SELECT_LANGUAGE="ja"
-      - NEXT_PUBLIC_MESSAGE_RECEIVER_URL="ws://localhost:8000"
-      - NEXT_PUBLIC_MESSAGE_RECEIVER_ENABLED="true"
-    command: npx next dev 
+      - NEXT_PUBLIC_SELECT_LANGUAGE=ja
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_URL=ws://localhost:8000
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_ENABLED=true
+      - VOICEVOX_SERVER_URL=http://voicevox:50021
+      - NEXT_PUBLIC_VOICEVOX_SPEAKER=2
+    command: npx next dev
+    networks:
+      - appnet
 
   app-2:
     build: .
@@ -22,7 +26,31 @@ services:
       - .:/app
       - /app/node_modules
     environment:
-      - NEXT_PUBLIC_SELECT_LANGUAGE="ja"
-      - NEXT_PUBLIC_MESSAGE_RECEIVER_URL="ws://localhost:8001"
-      - NEXT_PUBLIC_MESSAGE_RECEIVER_ENABLED="true"
+      - NEXT_PUBLIC_SELECT_LANGUAGE=ja
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_URL=ws://localhost:8001
+      - NEXT_PUBLIC_MESSAGE_RECEIVER_ENABLED=true
+      - VOICEVOX_SERVER_URL=http://voicevox:50021
+      - NEXT_PUBLIC_VOICEVOX_SPEAKER=20
     command: npx next dev -p 3001
+    networks:
+      - appnet
+
+  voicevox:
+    image: voicevox/voicevox_engine:nvidia-latest
+    container_name: voicevox
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:50021:50021"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge

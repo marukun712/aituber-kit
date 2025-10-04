@@ -848,7 +848,8 @@ export const handleReceiveTextFromWsFn =
     text: string,
     role?: string,
     emotion: EmotionType = 'neutral',
-    type?: string
+    type?: string,
+    messageId?: string
   ) => {
     const sessionId = generateSessionId()
     if (text === null || role === undefined) return
@@ -909,6 +910,29 @@ export const handleReceiveTextFromWsFn =
             },
             () => {
               // hs.decrementChatProcessingCount()
+              // 発話完了時にWebSocketへ通知を送信
+              console.log(messageId, 'completed')
+              if (
+                messageId &&
+                wsManager?.websocket?.readyState === WebSocket.OPEN
+              ) {
+                try {
+                  wsManager.websocket.send(
+                    JSON.stringify({
+                      jsonrpc: '2.0',
+                      id: messageId,
+                      result: {
+                        success: true,
+                      },
+                    })
+                  )
+                } catch (error) {
+                  console.error(
+                    'Failed to send completion notification:',
+                    error
+                  )
+                }
+              }
             }
           )
         } catch (e) {

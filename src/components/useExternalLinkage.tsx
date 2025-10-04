@@ -8,6 +8,7 @@ import { EmotionType } from '@/features/messages/messages'
 
 ///取得したコメントをストックするリストの作成（receivedMessages）
 interface TmpMessage {
+  id?: string
   text: string
   role: string
   emotion: EmotionType
@@ -19,7 +20,8 @@ interface Params {
     text: string,
     role?: string,
     emotion?: EmotionType,
-    type?: string
+    type?: string,
+    messageId?: string
   ) => Promise<void>
 }
 
@@ -34,7 +36,8 @@ const useExternalLinkage = ({ handleReceiveTextFromWs }: Params) => {
         message.text,
         message.role,
         message.emotion,
-        message.type
+        message.type,
+        message.id
       )
     },
     [handleReceiveTextFromWs]
