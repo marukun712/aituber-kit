@@ -12,6 +12,7 @@ import i18next from 'i18next'
 import toastStore from '@/features/stores/toast'
 import { generateMessageId } from '@/utils/messageUtils'
 import { isMultiModalAvailable } from '@/features/constants/aiModels'
+import { SpeakQueue } from '../messages/speakQueue'
 
 // セッションIDを生成する関数
 const generateSessionId = () => generateMessageId()
@@ -897,6 +898,28 @@ export const handleReceiveTextFromWsFn =
       }
 
       if (role === 'assistant' && text !== '') {
+        SpeakQueue.onSpeakCompletion(() => {
+          if (
+            messageId &&
+            wsManager?.websocket?.readyState === WebSocket.OPEN
+          ) {
+            console.log(messageId)
+            try {
+              wsManager.websocket.send(
+                JSON.stringify({
+                  jsonrpc: '2.0',
+                  id: messageId,
+                  result: {
+                    success: true,
+                    body: { success: true },
+                  },
+                })
+              )
+            } catch (error) {
+              console.error('Failed to send completion notification:', error)
+            }
+          }
+        })
         try {
           // 文ごとに音声を生成 & 再生、返答を表示
           speakCharacter(
@@ -910,29 +933,6 @@ export const handleReceiveTextFromWsFn =
             },
             () => {
               // hs.decrementChatProcessingCount()
-              // 発話完了時にWebSocketへ通知を送信
-              console.log(messageId, 'completed')
-              if (
-                messageId &&
-                wsManager?.websocket?.readyState === WebSocket.OPEN
-              ) {
-                try {
-                  wsManager.websocket.send(
-                    JSON.stringify({
-                      jsonrpc: '2.0',
-                      id: messageId,
-                      result: {
-                        success: true,
-                      },
-                    })
-                  )
-                } catch (error) {
-                  console.error(
-                    'Failed to send completion notification:',
-                    error
-                  )
-                }
-              }
             }
           )
         } catch (e) {

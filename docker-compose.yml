@@ -6,7 +6,6 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - .:/app
       - /app/node_modules
     environment:
       - NEXT_PUBLIC_SELECT_LANGUAGE=ja
@@ -23,7 +22,6 @@ services:
     ports:
       - '3001:3001'
     volumes:
-      - .:/app
       - /app/node_modules
     environment:
       - NEXT_PUBLIC_SELECT_LANGUAGE=ja
