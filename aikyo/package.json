@@ -1,0 +1,24 @@
+{
+  "name": "aikyo",
+  "version": "1.0.0",
+  "type": "module",
+  "packageManager": "pnpm@10.15.1",
+  "scripts": {
+    "bridge": "npx tsx bridge.ts",
+    "kyoko": "npx tsx companions/kyoko/companion.ts",
+    "aya": "npx tsx companions/aya/companion.ts",
+    "natsumi": "npx tsx companions/natsumi/companion.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.26",
+    "@aikyo/firehose": "^1.5.3",
+    "@aikyo/server": "^1.4.3",
+    "@aikyo/utils": "^1.4.0",
+    "@openrouter/ai-sdk-provider": "^1.2.0",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6"
+  }
+}

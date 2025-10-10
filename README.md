@@ -1,3 +1,45 @@
+# aikyo AITuberKit Demo
+
+[aikyo](https://github.com/marukun712/aikyo)バックエンドを使って、複数のAIキャラクターを対話させるデモです。
+
+# Usage
+
+aikyoをインストールします。
+```bash
+cd aikyo
+pnpm i
+```
+
+OpenRouterのAPIキーを入力します。
+```bash
+cp .env.example .env
+```
+動作確認済みのプロバイダーについては、以下を参照してください。
+
+https://github.com/marukun712/aikyo/issues/71
+
+aikyoネットワークとAITuberKitの外部連携モードをつなぐブリッジを起動します。
+```bash
+pnpm bridge
+```
+
+```bash
+pnpm kyoko
+pnpm aya
+pnpm natsumi
+
+cd ../
+```
+
+3つのAITuberKitクライアントを起動します。
+```bash
+docker-compose up
+```
+
+AITuberKitの起動後、各タブで外部連携モードが有効になっているかを確認してください。
+
+以下、本家README
+
 # AITuberKit
 
 <img style="max-width: 100%;" src="./public/ogp.png">
